@@ -29,6 +29,7 @@ namespace winform_app
             PokemonNegocio negocio = new PokemonNegocio();
             listaPokemon = negocio.listar(); // CARGAMOS LA LISTA
             dgvPokemons.DataSource = negocio.listar(); // LA MOSTRAMOS EN DATAGRIDVIEW CON LA URL DE LA IMAGEN
+            dgvPokemons.Columns["UrlImagen"].Visible = false; // OCULTAMOS LA COLUMNA DE LA URL PORQUE NO ES NECESARIA
             // pbxPokemon.Load(listaPokemon[0].UrlImagen); // CUANDO SE CARGA EL PBXPOKEMON, SE CARGA CON LA
             // IMAGEN DEL PRIMEN POKEMON (DEL INDICE 0) DE LA LISTA POKEMON
                                          // PERO
@@ -41,8 +42,8 @@ namespace winform_app
         {
             // PARA CAMBIAR LA IMAGEN SEGUN CAMBIAS DE FILA DE LA TABLA DE POKEMON
             Pokemon seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem; // CREAMOS UNA VARIABLE,
-                                                                                  // PARA GUARDAR  (DEL TIPO DATO POKEMON) DE LA LISTA POKEMON, LA FILA ACTUAL SELECCIONADA,
-                                                                                  // DAME EL OBJETO/ITEM ENLAZADO (URL)
+            // PARA GUARDAR  (DEL TIPO DATO POKEMON) DE LA LISTA POKEMON, LA FILA ACTUAL SELECCIONADA,
+            // DAME EL OBJETO/ITEM ENLAZADO (URL)
 
             // PARA TERMINAR, CARGAMOS EN EL PBXPOKEMON LA IMAGEN SELECCIONADA.
             // pbxPokemon.Load(seleccionado.UrlImagen);// AQUI SE TERMINARIA.

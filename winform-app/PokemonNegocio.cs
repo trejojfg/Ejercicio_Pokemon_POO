@@ -30,7 +30,7 @@ namespace winform_app
                 //  b) CON TYPE.STOREDPROCEDURE - SE MANDA CON UN PROCEDIMIENTO ALMACENADO (FUNCION)
                 comando.CommandType = System.Data.CommandType.Text;
                 // 3º REALIZAMOS LA CONSULTA SQL
-                comando.CommandText = "Select Numero, Nombre, Descripcion, UrlImagen From POKEMONS";
+                comando.CommandText = "Select Numero, Nombre, P.Descripcion, UrlImagen, E.Descripcion Tipo, D.Descripcion Debilidad  From POKEMONS P, ELEMENTOS E, ELEMENTOS D Where E.Id = P.IdTipo AND D.Id = P.IdDebilidad";
                 // 4º LLAMAR A LA EJECUCION DEL COMANDO DE CONEXION
                 comando.Connection = conexion;
                 // 5º ABRIMOS LA CONEXION
@@ -53,6 +53,10 @@ namespace winform_app
                     aux.Nombre = (string)lector["Nombre"];// SE PONE EL NOMBRE DE LA COLUMNA QUE SE PUSO EN LA SENTENCIA A LA HORA DE SOLICITAR LOS DATOS EN EL COMMAND
                     aux.Descripcion = (string)lector["Descripcion"];
                     aux.UrlImagen = (string)lector["UrlImagen"];
+                    aux.Tipo = new Elemento(); // CREAMOS LA VARIABLE aux.Tipo DEL OBJETO ELEMENTO
+                    aux.Tipo.Descripcion = (string)lector["Tipo"];// SEÑALAMOS QUE ES LA COLUMNA Descripcion DE LA TABLA ELEMENTO
+                    aux.Debilidad = new Elemento(); // CREAMOS LA VARIABLE aux.Debilidad DEL OBJETO ELEMENTO
+                    aux.Debilidad.Descripcion = (string)lector["Debilidad"]; // SEÑALAMOS QUE ES LA COLUMNA Descripcion DE LA TABLA ELEMENTO
 
                 // GUARDAMOS LA FILA DE LA VARIABLE "AUX" EN LA LISTA "lista" HASTA QUE YA NO
                 // HAYA MAS DATOS -----> WHILE = FALSE
@@ -65,7 +69,7 @@ namespace winform_app
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Hay un problema...." + ex);
+                // MessageBox.Show("Hay un problema...." + ex);
                 throw ex;
 
             }
