@@ -30,7 +30,7 @@ namespace winform_app
                 //  b) CON TYPE.STOREDPROCEDURE - SE MANDA CON UN PROCEDIMIENTO ALMACENADO (FUNCION)
                 comando.CommandType = System.Data.CommandType.Text;
                 // 3º REALIZAMOS LA CONSULTA SQL
-                comando.CommandText = "Select Numero, Nombre, Descripcion From POKEMONS";
+                comando.CommandText = "Select Numero, Nombre, Descripcion, UrlImagen From POKEMONS";
                 // 4º LLAMAR A LA EJECUCION DEL COMANDO DE CONEXION
                 comando.Connection = conexion;
                 // 5º ABRIMOS LA CONEXION
@@ -52,6 +52,7 @@ namespace winform_app
                     // b) CON EL NOMBRE DE LA COLUMNA
                     aux.Nombre = (string)lector["Nombre"];// SE PONE EL NOMBRE DE LA COLUMNA QUE SE PUSO EN LA SENTENCIA A LA HORA DE SOLICITAR LOS DATOS EN EL COMMAND
                     aux.Descripcion = (string)lector["Descripcion"];
+                    aux.UrlImagen = (string)lector["UrlImagen"];
 
                 // GUARDAMOS LA FILA DE LA VARIABLE "AUX" EN LA LISTA "lista" HASTA QUE YA NO
                 // HAYA MAS DATOS -----> WHILE = FALSE
