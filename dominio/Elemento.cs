@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace winform_app
+namespace dominio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE dominio
 {
-    internal class Elemento
+    public class Elemento // PONEMOS LA CLASE COMO public
     {
         // CREAMOS LA CLASE ELEMENTO Y AÑADIMOS LAS 2 PROPIEDADES QUE VA A TENER
         public int Id { get; set; }

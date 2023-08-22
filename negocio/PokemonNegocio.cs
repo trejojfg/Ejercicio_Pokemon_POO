@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient; // SE AÑADE LA LIBRERIA DE SQLCLIENT PARA LA CONECTIVIDAD A SQL
-using System.Windows.Forms;
+//using System.Windows.Forms; // QUITAMOS ESTE using PORQUE NO ES NECESARIO YA
+using dominio;  // INCLUIMOS EL using DE dominio PARA PODER ENLAZARLO
 
-namespace winform_app
+namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
 {
-    class PokemonNegocio
+    public class PokemonNegocio  // PONEMOS LA CLASE COMO public
     {
         public List<Pokemon> listar() // SE CREA EL METODO "listar" EN FORMA DE LISTA
         {

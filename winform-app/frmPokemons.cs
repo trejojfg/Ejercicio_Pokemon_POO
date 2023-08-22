@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using dominio;  // INCLUIMOS EL using DE dominio PARA PODER ENLAZARLO
+using negocio;   // INCLUIMOS EL using DE negocio PARA PODER ENLAZARLO
 
 namespace winform_app
 {
