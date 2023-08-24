@@ -60,7 +60,7 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
                     aux.Debilidad.Descripcion = (string)lector["Debilidad"]; // SEÑALAMOS QUE ES LA COLUMNA Descripcion DE LA TABLA ELEMENTO
 
                 // GUARDAMOS LA FILA DE LA VARIABLE "AUX" EN LA LISTA "lista" HASTA QUE YA NO
-                // HAYA MAS DATOS -----> WHILE = FALSE
+                // HAYA MAS DATOS -- y ---> WHILE = FALSE
                     lista.Add(aux);
                 }
                 // CERRAMOS LA CONEXION - PERO SE SUELE PONER EN EL FINALLY DE LA FUNCION TRY
