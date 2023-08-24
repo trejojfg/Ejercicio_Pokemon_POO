@@ -55,6 +55,25 @@ namespace negocio
             }
         }
 
+        // PARA REALIZAR UNA CONSULTA SOBRE SQL QUE SEA AGREGAR, MODIFICAR, ELIMINAR UN POKEMON,
+        // SE REALIZA SOBRE LA FUNCION ejecutarAccion, YA QUE NO ES UNA LECTURA SINO UNA ACCION
+        // SOBRE SQL Y POR ESO SE USA EL EJECUTABLE ExecuteNonQuery()
+        public void ejecutarAccion()
+        {
+            comando.Connection = conexion;
+            try
+            {
+                conexion.Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
             // Y PARA TERMINAR, HAY QUE CERRAR LA CONEXION CON BD Y EL LECTOR
         public void cerrarConexion()
         {

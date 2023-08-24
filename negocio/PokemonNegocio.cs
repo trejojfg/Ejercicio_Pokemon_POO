@@ -75,5 +75,31 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
 
             }
         }
+        // PARA AGREGAR UN POKEMON NUEVO EN BD SQL, SE TIENE QUE HACER MEDIANTE UNA FUNCION
+        public void agregar(Pokemon nuevo)
+        {
+            AccesoDatos datos = new AccesoDatos(); // SE GENERA LA VARIABLE PARA EL NUEVO POKEMON
+
+            // SE REALIZA LA CONSULTA A SQL MEDIANTE SU FUNCION setearConsulta Y SE EJECUTA EL
+            // METODO ejecutarAccion PARA INSERTAR LOS NUEVOS DATOS A LA BD SQL
+            try
+            {
+                datos.setearConsulta ("Insert into POKEMONS (Numero, Nombre, Descripcion, Activo)values(" + nuevo.Numero + ", '" + nuevo.Nombre + "', '" + nuevo.Descripcion + "', 1)");
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally // SE CIERRA LA CONEXION
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public void modificar(Pokemon modificar)
+        {
+
+        }
     }
 }

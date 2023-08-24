@@ -67,5 +67,11 @@ namespace winform_app
                 pbxPokemon.Load("https://enteracloud.mx/wp-content/uploads/2021/08/placeholder.png");
             }
         }
+
+        private void btnAgregar_Click(object sender, EventArgs e)
+        {
+            frmAltaPokemon alta = new frmAltaPokemon();
+            alta.ShowDialog();
+        }
     }
 }
