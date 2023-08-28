@@ -80,11 +80,13 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
         {
             AccesoDatos datos = new AccesoDatos(); // SE GENERA LA VARIABLE PARA EL NUEVO POKEMON
 
-            // SE REALIZA LA CONSULTA A SQL MEDIANTE SU FUNCION setearConsulta Y SE EJECUTA EL
-            // METODO ejecutarAccion PARA INSERTAR LOS NUEVOS DATOS A LA BD SQL
             try
             {
+            // SE REALIZA LA CONSULTA A SQL MEDIANTE SU FUNCION setearConsulta, Y SOLO SE HARIA ESTO
+            // PORQUE NO VA A DEVOLVER DATOS, YA QUE ES SOLO DE INSERTAR DATOS
                 datos.setearConsulta ("Insert into POKEMONS (Numero, Nombre, Descripcion, Activo)values(" + nuevo.Numero + ", '" + nuevo.Nombre + "', '" + nuevo.Descripcion + "', 1)");
+            // Y SE EJECUTA EL METODO ejecutarAccion PARA INSERTAR LOS NUEVOS DATOS A LA BD SQL, YA QUE 
+            // EL METODO ejecutarLectura NO VALE,
                 datos.ejecutarAccion();
             }
             catch (Exception ex)
@@ -94,7 +96,7 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
             }
             finally // SE CIERRA LA CONEXION
             {
-                datos.cerrarConexion();
+                datos.cerrarConexion();// COMO NO ES UNA CONSULTA DE LECTURA, HAY QUE CERRARLA
             }
         }
         public void modificar(Pokemon modificar)

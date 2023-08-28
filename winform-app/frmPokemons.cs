@@ -68,6 +68,8 @@ namespace winform_app
             }
         }
 
+        // PARA AGREGAR UN NUEVO ALTA DE POKEMON, AGREGAMOS BOTON CON UNA FUNCION DE ABRIR UNA 
+        // NUEVA VENTANA frmAltaPokemon
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             frmAltaPokemon alta = new frmAltaPokemon();

@@ -60,11 +60,12 @@ namespace negocio
         // SOBRE SQL Y POR ESO SE USA EL EJECUTABLE ExecuteNonQuery()
         public void ejecutarAccion()
         {
+            // CREAMON LAS CONEXION
             comando.Connection = conexion;
             try
             {
-                conexion.Open();
-                comando.ExecuteNonQuery();
+                conexion.Open(); // ABRIMOS LA CONEXION
+                comando.ExecuteNonQuery(); // EJECUTAMOS LA INSERCION DE LOS DATOS EN LA DB
             }
             catch (Exception ex)
             {
@@ -74,7 +75,7 @@ namespace negocio
         }
 
 
-            // Y PARA TERMINAR, HAY QUE CERRAR LA CONEXION CON BD Y EL LECTOR
+        // Y PARA TERMINAR, HAY QUE CERRAR LA CONEXION CON BD Y EL LECTOR
         public void cerrarConexion()
         {
             if(lector != null) // ES PARA QUE NO HAYA OTRA CONEXION ABIERTA
