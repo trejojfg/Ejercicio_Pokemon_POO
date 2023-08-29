@@ -30,7 +30,7 @@ namespace negocio
                     // SE CARGA EL TIPO DE DATO CORRECTO SQL-VS
                     aux.Id = (int)datos.Lector["Id"]; // SE PONE EL NOMBRE DE LA COLUMNA QUE SE PUSO EN
 													  // LA SENTENCIA A LA HORA DE SOLICITAR LOS DATOS EN EL COMMAND
-                    aux.Descripcion = (string)datos.Lector["Description"];
+                    aux.Descripcion = (string)datos.Lector["Descripcion"];
 
                     // GUARDAMOS LA FILA DE LA VARIABLE "AUX" EN LA LISTA "lista" HASTA QUE YA NO
                     // HAYA MAS DATOS -- y ---> WHILE = FALSE
@@ -42,7 +42,7 @@ namespace negocio
 			}
 			catch (Exception ex)
 			{
-
+				
 				throw ex;
 			}
 			finally // INTRODUCIMOS EL finally PARA PODER CERRAR EL Lector Y LA conexion A SQL, 

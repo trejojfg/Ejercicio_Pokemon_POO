@@ -73,7 +73,13 @@ namespace negocio
                 throw ex;
             }
         }
-
+        // PARA PODER VALIDAR LOS PARAMETROS DE LAS VARIABLES CON SIGNO @, SE CREA LA FUNCION
+        // setearParametros, LO QUE HACE ES COGER POR REFERENCIA, UN nombre Y UN valor
+        // LOS CUALES SALEN DE LA FUNCION agregar (EN LA CLASE AccesoDatos)
+        public void setearParametro(string nombre, object valor)
+        {
+            comando.Parameters.AddWithValue(nombre, valor);
+        }
 
         // Y PARA TERMINAR, HAY QUE CERRAR LA CONEXION CON BD Y EL LECTOR
         public void cerrarConexion()

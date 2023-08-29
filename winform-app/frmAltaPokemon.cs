@@ -41,6 +41,8 @@ namespace winform_app
                 poke.Numero = int.Parse(txtNumero.Text);
                 poke.Nombre = txtNombre.Text;
                 poke.Descripcion = txtDescripcion.Text;
+                poke.Tipo = (Elemento)cboTipo.SelectedItem;//SE CARGA UN OBJETO DEL ELEMENTO SELECCIONADO
+                poke.Debilidad = (Elemento)cboDebilidad.SelectedItem;//SE CARGA UN OBJETO DEL ELEMENTO SELECCIONADO
                 // SE MANDAN LOS DATOS A DB POR MEDIO DE LA FUNCION AGREGAR QUE HAY EN 
                 // POKEMONNEGOCIO
                 negocio.agregar(poke);
@@ -58,6 +60,27 @@ namespace winform_app
                 MessageBox.Show(ex.ToString());
             }
 
+        }
+
+        // CARGAMOS LOS COMBOBOX DE LOS ELEMENTOS DESPLEGABLES (tipo y Debilidad) CUANDO 
+        // SE CARGUE EL FORMULARIO frmAltaPokemon
+        private void frmAltaPokemon_Load(object sender, EventArgs e)
+        {
+            // SE GENERA LA VARIABLE elementoNegocio DEL TIPO DATO ElementoNegocio,
+            ElementoNegocio elementoNegocio = new ElementoNegocio();
+
+            // VAMOS A UTILIZAR EL METODO listar QUE HAY EN LA CLASE ElementoNegocio PARA
+            // TRAER LOS DATOS DE SQL A LOS COMBOBOX
+
+            try
+            {
+                cboTipo.DataSource = elementoNegocio.listar();
+                cboDebilidad.DataSource = elementoNegocio.listar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }
