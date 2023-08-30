@@ -53,7 +53,16 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
                     // b) CON EL NOMBRE DE LA COLUMNA
                     aux.Nombre = (string)lector["Nombre"];// SE PONE EL NOMBRE DE LA COLUMNA QUE SE PUSO EN LA SENTENCIA A LA HORA DE SOLICITAR LOS DATOS EN EL COMMAND
                     aux.Descripcion = (string)lector["Descripcion"];
-                    aux.UrlImagen = (string)lector["UrlImagen"];
+
+                    // HAY DOS MANERAS DE VALIDACION DE LOS DATOS CON UN null DE UNA COLUMNA,
+                    // CUANDO EN DB DE SQL TIENE NULL Y EL CAMPO ADMITE NULL:
+                    // a) UTILIZAMOS UN if CON NEGACION ! CONTRA LA COLUMNA
+                    // if(!(lector.IsDBNull(lector.GetOrdinal("UrlImagen"))))// CONSULTA: si no es null en la columna UrlImagen
+                    //    aux.UrlImagen = (string)lector["UrlImagen"];// condicional SI - EJECUTA ESTA ACCION
+                    // b) UTILIZAMOS UN if CON NEGACION ! PERO DIRECTAMENTE CONTRA EL OBJETO 
+                    if(!(lector["UrlImagen"] is DBNull))// CONSULTA: si no es null el objeto UrlImagen
+                        aux.UrlImagen = (string)lector["UrlImagen"];// condicional SI - EJECUTA ESTA ACCION
+
                     aux.Tipo = new Elemento(); // CREAMOS LA VARIABLE aux.Tipo DEL OBJETO ELEMENTO
                     aux.Tipo.Descripcion = (string)lector["Tipo"];// SEÑALAMOS QUE ES LA COLUMNA Descripcion DE LA TABLA ELEMENTO
                     aux.Debilidad = new Elemento(); // CREAMOS LA VARIABLE aux.Debilidad DEL OBJETO ELEMENTO

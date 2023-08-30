@@ -29,15 +29,26 @@ namespace winform_app
 
             // PARA INCLUIR LA IMAGEN, TENEMOS QUE GUARDAR LA TABLA VIRTUAL EN LA listaPokemon
             PokemonNegocio negocio = new PokemonNegocio();
-            listaPokemon = negocio.listar(); // CARGAMOS LA LISTA
-            dgvPokemons.DataSource = negocio.listar(); // LA MOSTRAMOS EN DATAGRIDVIEW CON LA URL DE LA IMAGEN
-            dgvPokemons.Columns["UrlImagen"].Visible = false; // OCULTAMOS LA COLUMNA DE LA URL PORQUE NO ES NECESARIA
-            // pbxPokemon.Load(listaPokemon[0].UrlImagen); // CUANDO SE CARGA EL PBXPOKEMON, SE CARGA CON LA
-            // IMAGEN DEL PRIMEN POKEMON (DEL INDICE 0) DE LA LISTA POKEMON
-                                         // PERO
-            // AL HACER EL METODO cargarImagen, SALVAMOS POSIBLES PROBLEMAS CON LAS IMAGENES
-            cargarImagen(listaPokemon[0].UrlImagen);
 
+            // PARA QUE NO SALGA EXCEPCION POR null, HAY QUE VALIDAR
+            // ENTONCES VAMOS A VALIR LA COLUMNA UrlImagen CON EL TRY
+
+            try
+            {
+                listaPokemon = negocio.listar(); // CARGAMOS LA LISTA
+                dgvPokemons.DataSource = negocio.listar(); // LA MOSTRAMOS EN DATAGRIDVIEW CON LA URL DE LA IMAGEN
+                dgvPokemons.Columns["UrlImagen"].Visible = false; // OCULTAMOS LA COLUMNA DE LA URL PORQUE NO ES NECESARIA
+                // pbxPokemon.Load(listaPokemon[0].UrlImagen); // CUANDO SE CARGA EL PBXPOKEMON, SE CARGA CON LA
+                // IMAGEN DEL PRIMEN POKEMON (DEL INDICE 0) DE LA LISTA POKEMON PERO
+                // AL HACER EL METODO cargarImagen, SALVAMOS POSIBLES PROBLEMAS CON LAS IMAGENES
+                cargarImagen(listaPokemon[0].UrlImagen);
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void dgvPokemons_SelectionChanged(object sender, EventArgs e)
