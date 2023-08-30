@@ -27,28 +27,8 @@ namespace winform_app
             // PokemonNegocio negocio = new PokemonNegocio();
             // dgvPokemons.DataSource = negocio.listar();
 
-            // PARA INCLUIR LA IMAGEN, TENEMOS QUE GUARDAR LA TABLA VIRTUAL EN LA listaPokemon
-            PokemonNegocio negocio = new PokemonNegocio();
-
-            // PARA QUE NO SALGA EXCEPCION POR null, HAY QUE VALIDAR
-            // ENTONCES VAMOS A VALIR LA COLUMNA UrlImagen CON EL TRY
-
-            try
-            {
-                listaPokemon = negocio.listar(); // CARGAMOS LA LISTA
-                dgvPokemons.DataSource = negocio.listar(); // LA MOSTRAMOS EN DATAGRIDVIEW CON LA URL DE LA IMAGEN
-                dgvPokemons.Columns["UrlImagen"].Visible = false; // OCULTAMOS LA COLUMNA DE LA URL PORQUE NO ES NECESARIA
-                // pbxPokemon.Load(listaPokemon[0].UrlImagen); // CUANDO SE CARGA EL PBXPOKEMON, SE CARGA CON LA
-                // IMAGEN DEL PRIMEN POKEMON (DEL INDICE 0) DE LA LISTA POKEMON PERO
-                // AL HACER EL METODO cargarImagen, SALVAMOS POSIBLES PROBLEMAS CON LAS IMAGENES
-                cargarImagen(listaPokemon[0].UrlImagen);
-
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            // UTILIZAMOS LA FUNCION cargar, PARA UTILIZARLA SIEMPRE QUE CARGUE EL FORMULARIO
+            cargar();
         }
 
         private void dgvPokemons_SelectionChanged(object sender, EventArgs e)
@@ -78,13 +58,43 @@ namespace winform_app
                 pbxPokemon.Load("https://enteracloud.mx/wp-content/uploads/2021/08/placeholder.png");
             }
         }
+        // EL CODIGO QUE HAY DENTRO DEL METODO cargar, ES EL QUE ESTABA EN frmPokemon_Load.
+        // PARA VOLVER A CARGAR EL frmPokemon SIN TENER QUE SALIR Y VOLVER A ENTRAR DE LA
+        // APLICACION, SE CREA EL METODO cargar, EL CUAL SE REEMPLAZARA E INCLUIRA 
+        // EN EL METODO DE frmPokemon_load (DEL INICIO DE ESTA CLASE)
 
-        // PARA AGREGAR UN NUEVO ALTA DE POKEMON, AGREGAMOS BOTON CON UNA FUNCION DE ABRIR UNA 
-        // NUEVA VENTANA frmAltaPokemon
+        private void cargar()
+        {
+            // PARA INCLUIR LA IMAGEN, TENEMOS QUE GUARDAR LA TABLA VIRTUAL EN LA listaPokemon
+            PokemonNegocio negocio = new PokemonNegocio();
+
+            // PARA QUE NO SALGA EXCEPCION POR null, HAY QUE VALIDAR
+            // ENTONCES VAMOS A VALIR LA COLUMNA UrlImagen CON EL TRY
+
+            try
+            {
+                listaPokemon = negocio.listar(); // CARGAMOS LA LISTA
+                dgvPokemons.DataSource = negocio.listar(); // LA MOSTRAMOS EN DATAGRIDVIEW CON LA URL DE LA IMAGEN
+                dgvPokemons.Columns["UrlImagen"].Visible = false; // OCULTAMOS LA COLUMNA DE LA URL PORQUE NO ES NECESARIA
+                // pbxPokemon.Load(listaPokemon[0].UrlImagen); // CUANDO SE CARGA EL PBXPOKEMON, SE CARGA CON LA
+                // IMAGEN DEL PRIMEN POKEMON (DEL INDICE 0) DE LA LISTA POKEMON PERO
+                // AL HACER EL METODO cargarImagen, SALVAMOS POSIBLES PROBLEMAS CON LAS IMAGENES
+                cargarImagen(listaPokemon[0].UrlImagen);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+    // PARA AGREGAR UN NUEVO ALTA DE POKEMON, AGREGAMOS BOTON CON UNA FUNCION DE ABRIR UNA 
+    // NUEVA VENTANA frmAltaPokemon
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            frmAltaPokemon alta = new frmAltaPokemon();
-            alta.ShowDialog();
+                frmAltaPokemon alta = new frmAltaPokemon();
+                alta.ShowDialog();
+                cargar();
         }
     }
 }
