@@ -41,6 +41,7 @@ namespace winform_app
                 poke.Numero = int.Parse(txtNumero.Text);
                 poke.Nombre = txtNombre.Text;
                 poke.Descripcion = txtDescripcion.Text;
+                poke.UrlImagen = txtUrlImagen.Text;//SE INCLUYE LA UrlImagen PARA QUE SEA CARGADA CON EL pbxPokemon
                 poke.Tipo = (Elemento)cboTipo.SelectedItem;//SE CARGA UN OBJETO DEL ELEMENTO SELECCIONADO
                 poke.Debilidad = (Elemento)cboDebilidad.SelectedItem;//SE CARGA UN OBJETO DEL ELEMENTO SELECCIONADO
                 // SE MANDAN LOS DATOS A DB POR MEDIO DE LA FUNCION AGREGAR QUE HAY EN 
@@ -80,6 +81,23 @@ namespace winform_app
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+            }
+        }
+        // PARA CARGAR LA IMAGEN CON pbxPokemon, UTILIZAMOS EL METODO leave DEL txtUrlImagen.
+        // USAMOS LA FUNCION cargarImagen DE LA CLASE frmPokemons
+        private void txtUrlImagen_Leave(object sender, EventArgs e)
+        {
+            cargarImagen(txtUrlImagen.Text);// CARGAMOS LA IMAGEN QUE HAY DENTRO DEL txtUrlImagen
+        }
+        private void cargarImagen(string imagen)
+        {
+            try
+            {
+                pbxPokemon.Load(imagen);
+            }
+            catch (Exception ex)
+            {
+                pbxPokemon.Load("https://enteracloud.mx/wp-content/uploads/2021/08/placeholder.png");
             }
         }
     }
