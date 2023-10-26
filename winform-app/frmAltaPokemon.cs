@@ -14,9 +14,21 @@ namespace winform_app
 {
     public partial class frmAltaPokemon : Form
     {
+        // CREAMOS UN ATRIBUTO PRIVADO DEL OBJETO Pokemon, PARA PODER UTILIZARLO EN EL FORMULARIO
+        // A LA HORA DE DISTIRNGUIR ENTRE agregar (VALOR A null) Y modificar (!= null YA QUE NOS
+        // TRAEMOS LOS VALORES DE LA BD).
+        private Pokemon pokemon = null;
         public frmAltaPokemon()
         {
             InitializeComponent();
+        }
+        // PARA PODER MODIFICAR UN POKEMON, HAY QUE SOBRECARGAR EL CONSTRUCTOR Y PODER ASI
+        // MANDAR POR PARAMETROS LOS VALORES DEL POKEMON
+        public frmAltaPokemon(Pokemon pokemon)
+        {
+            InitializeComponent();
+            this.pokemon = pokemon;// PARA DECIR QUE ES EL pokemon QUE TRAEMOS DE LA BD POR PARAMETRO
+            Text = "Modificar Pokemon"; // SE CAMBIA EL NOMBRE DE LA frmAltaPokemon CUANDO SEA modificar
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
@@ -30,26 +42,43 @@ namespace winform_app
         {
             // SE GENERA UNA VARIABLE poke DEL TIPO DATO POKEMON, PARA ALMACENAR
             // LOS DATOS
-            Pokemon poke = new Pokemon();
+            // Pokemon poke = new Pokemon(); // ELIMINAMOS LA VARIABLE PORQUE SE CREO pokemon PARA modificar
             // TAMBIEN SE CREA  UNA VARIABLE negocio DEL TIPO DATO POKEMONNEGOCIO
             // PARA MANDAR LOS DATOS A LA DB DE SQL
             PokemonNegocio negocio = new PokemonNegocio();
 
             try
             {
-                // SE GUARDAN LOS DATOS EN LA VARIABLE poke
-                poke.Numero = int.Parse(txtNumero.Text);
-                poke.Nombre = txtNombre.Text;
-                poke.Descripcion = txtDescripcion.Text;
-                poke.UrlImagen = txtUrlImagen.Text;//SE INCLUYE LA UrlImagen PARA QUE SEA CARGADA CON EL pbxPokemon
-                poke.Tipo = (Elemento)cboTipo.SelectedItem;//SE CARGA UN OBJETO DEL ELEMENTO SELECCIONADO
-                poke.Debilidad = (Elemento)cboDebilidad.SelectedItem;//SE CARGA UN OBJETO DEL ELEMENTO SELECCIONADO
+                // SE GUARDAN LOS DATOS EN LA VARIABLE poke // LUEGO CAMBIAMOS poke POR pokemon PARA DIFERENCIAR SI 
+                // QUEREMOS agregar O modificar EN EL FORMULARIO frmAltaPokemon
+
+                if (pokemon == null) // SE DECLARÓ LA VARIABLE pokemon COMO null
+                    // SE DA POR ENTENDIDO QUE SI ESTAMOS AQUI, ES PORQUE SE LE DIO A agregar
+                {
+                    pokemon = new Pokemon(); // CARGAMOS LA VARIABLE CON EL POKEMON NUEVO
+                }
+                pokemon.Nombre = txtNombre.Text;
+                pokemon.Descripcion = txtDescripcion.Text;
+                pokemon.UrlImagen = txtUrlImagen.Text;//SE INCLUYE LA UrlImagen PARA QUE SEA CARGADA CON EL pbxPokemon
+                pokemon.Numero = int.Parse(txtNumero.Text);
+                pokemon.Tipo = (Elemento)cboTipo.SelectedItem;//SE CARGA UN OBJETO DEL ELEMENTO SELECCIONADO
+                pokemon.Debilidad = (Elemento)cboDebilidad.SelectedItem;//SE CARGA UN OBJETO DEL ELEMENTO SELECCIONADO
                 // SE MANDAN LOS DATOS A DB POR MEDIO DE LA FUNCION AGREGAR QUE HAY EN 
                 // POKEMONNEGOCIO
-                negocio.agregar(poke);
-                // Y SI HA IDO TODO BIEN, LANZAMOS ESTE MENSAJE DE CONFIRMACION
-                MessageBox.Show("Correctamente Agregado");
-                // SE CERRARIA EL FORMULARIO Y VOLVERIA A LA VENTANA PRINCIPAL
+                if (pokemon.Id != 0)
+                {
+                    negocio.modificar(pokemon);
+                    // Y SI HA IDO TODO BIEN, LANZAMOS ESTE MENSAJE DE CONFIRMACION
+                    MessageBox.Show("Modificado Exitosamente");
+                    // SE CERRARIA EL FORMULARIO Y VOLVERIA A LA VENTANA PRINCIPAL
+                }
+                else
+                {
+                    negocio.agregar(pokemon);
+                    // Y SI HA IDO TODO BIEN, LANZAMOS ESTE MENSAJE DE CONFIRMACION
+                    MessageBox.Show("Correctamente Agregado");
+                    // IGUAL QUE agregar PERO CON modificar
+                }
                 Close();
 
             }
@@ -76,7 +105,25 @@ namespace winform_app
             try
             {
                 cboTipo.DataSource = elementoNegocio.listar();
+                cboTipo.ValueMember = "Id";// INDICAMOS EL VALOR ESCONDIDO DEL cboTipo DEL OBJETO Elemento
+                cboTipo.DisplayMember = "Descripcion"; // INDICAMOS EL VALOR QUE SE MUESTRA DEL cboTipo DEL OBJETO Elemento
                 cboDebilidad.DataSource = elementoNegocio.listar();
+                cboDebilidad.ValueMember = "Id";// INDICAMOS EL VALOR ESCONDIDO DEL cboDebilidad  DEL OBJETO Elemento
+                cboDebilidad.DisplayMember = "Descripcion";// INDICAMOS EL VALOR QUE SE MUESTRA DEL cboDebilidad  DEL OBJETO Elemento
+
+                // HACEMOS ESTA VALIDACION PARA SABER SI EL pokemon ES null (ENTONCES ES agregar) Y
+                // SI ES !=null (ENTONCES ES modificar)
+                if (pokemon != null)
+                {
+                    // CARGO LOS DATOS DE LA DB EN LOS CAMPOS CORRESPONDIENTES
+                    txtNumero.Text = pokemon.Numero.ToString();
+                    txtNombre.Text = pokemon.Nombre;
+                    txtDescripcion.Text = pokemon.Descripcion;
+                    txtUrlImagen.Text = pokemon.UrlImagen;
+                    cargarImagen(pokemon.UrlImagen);
+                    cboTipo.SelectedValue = pokemon.Tipo.Id;
+                    cboDebilidad.SelectedValue = pokemon.Debilidad.Id;
+                }
             }
             catch (Exception ex)
             {

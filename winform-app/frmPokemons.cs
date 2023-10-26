@@ -77,7 +77,9 @@ namespace winform_app
                 dgvPokemons.DataSource = negocio.listar(); // LA MOSTRAMOS EN DATAGRIDVIEW CON LA URL DE LA IMAGEN
                 dgvPokemons.Columns["UrlImagen"].Visible = false; // OCULTAMOS LA COLUMNA DE LA URL PORQUE NO ES NECESARIA
                 // pbxPokemon.Load(listaPokemon[0].UrlImagen); // CUANDO SE CARGA EL PBXPOKEMON, SE CARGA CON LA
+                dgvPokemons.Columns["Id"].Visible = false; // OCULTAMOS TAMBIEN LA COLUMNA DE Id
                 // IMAGEN DEL PRIMEN POKEMON (DEL INDICE 0) DE LA LISTA POKEMON PERO
+
                 // AL HACER EL METODO cargarImagen, SALVAMOS POSIBLES PROBLEMAS CON LAS IMAGENES
                 cargarImagen(listaPokemon[0].UrlImagen);
 
@@ -92,9 +94,43 @@ namespace winform_app
     // NUEVA VENTANA frmAltaPokemon
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-                frmAltaPokemon alta = new frmAltaPokemon();
-                alta.ShowDialog();
+            frmAltaPokemon alta = new frmAltaPokemon();
+            alta.ShowDialog();
+            cargar();
+        }
+    // PARA MODIFICAR UN POKEMON, AGREGAMOS BOTON REUTILIZANDO LA FUNCION DE ABRIR LA NUEVA VENTANA
+    // frmAltaPokemon PERO VARIANDO PARA QUE EN LUGAR DE ESTAR VACIA, SE LLENEN LOS CAMPOS
+    // CON LOS DATOS TRAIDOS DE SQL PASADOS POR PARAMETRO DEL OBJETO Pokemon
+        private void btnModificar_Click(object sender, EventArgs e)
+        {
+            Pokemon seleccionado;
+            seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem;//SELECCIONAMOS
+            //EL Pokemon QUE QUEREMOS MODIFICAR - EL QUE ESTA SELECCIONADO EN ESE MOMENTO EN EL dgvPokemons
+            frmAltaPokemon modificar = new frmAltaPokemon(seleccionado);//PASAMOS POR PARAMETROS
+            // EL Pokemon SELECCIONADO MEDIANTE EL CONSTRUCTOR SOBRECARGADO
+            modificar.ShowDialog();
+            cargar();
+        }
+
+        private void btnEliminarFisica_Click(object sender, EventArgs e)
+        {
+            PokemonNegocio negocio = new PokemonNegocio();
+            Pokemon seleccionado;//CREAMOS LA VARIABLE seleccionado PARA IDENTIFICAR EL id DE
+            // LA BD QUE QUEREMOS ELIMINAR
+            try
+            {//UTILIZAMOS EL DialogResult PARA GUARDAR EL RESULTADO A LA PREGUNTA DE ELIMINAR
+                DialogResult respuesta = MessageBox.Show("¿Estas seguro de ELIMINAR el Pokemon?", "Eliminando....", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (respuesta == DialogResult.Yes)//CONDICIONAMOS LA CONTESTACION A Yes/No
+                { //PARA ELIMINAR EL POKEMON SELECCIONADO TOTALMENTE DE LA BD
+                seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem;//EL id DEL POKEMON SELECCIONADO
+                negocio.eliminar(seleccionado.Id);//PASAMOS POR PARAMETRO EL id AL METODO ELIMINAR Y LO ELIMINA
                 cargar();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }

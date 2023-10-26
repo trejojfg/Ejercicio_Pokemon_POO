@@ -9,6 +9,7 @@ namespace dominio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE dominio
 {
     public class Pokemon // PONEMOS LA CLASE COMO public
     {
+        public int Id { get; set; } // INCLUIMOS LA PROP PARA modificar POKEMON
         [DisplayName("Número")]// SUSTITUYE EN EL dgvPokemos EN LA COLUMNA "Numero"
         public int Numero { get; set; }
         public string Nombre { get; set; }
