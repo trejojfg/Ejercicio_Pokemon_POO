@@ -202,7 +202,7 @@ namespace winform_app
             }
         }
 
-        private void btnFiltro_Click(object sender, EventArgs e)
+        private void txtFiltro_TextChanged(object sender, EventArgs e)
         {
             List<Pokemon> listaFiltrada;// CREAMOS UNA NUEVA LISTA listaFiltrada CARGADA CON 
             //TODOS LOS POKEMOS DE LA ListPokemon (ES UN ATRIBUTO ESTA LISTA)
@@ -210,18 +210,19 @@ namespace winform_app
             //EN EL CAMPO DEL FILTRO
 
             //PARA VALIDAR EL FILTRO Y VOLVER AL PRINCIPIO SIN FILTROS CON LA LISTA ORIGINAL
-            //USAMOS EL if SOBRE EL CAMPO DEL FILTRO SI ESTA VACIO O NO
-            if (filtro != "")
+            //USAMOS EL if DE DOS MANERAS:
+            //if (filtro != "") //SOBRE EL CAMPO DEL FILTRO SI ESTA VACIO O NO
+            if (filtro.Length >= 3)//SOBRE LA LONGITUD DEL CAMPO, SEA MAYOR A UNA CANTIDAD DE CARACTERES
             {// HAY VARIOS FILTROS, PERO LOS MAS COMUNES SON:
-                //-ESTE FILTRO ES PARA CUANDO SE QUIERE BUSCAR ALGO EXPRESO EN UNA COLUMNA:
-              //listaFiltrada = listaPokemon.FindAll(x => x.Nombre == filtro);// ASIGNAMOS
-                    //EL METODO FindAll (BUSCAR TODO LO QUE HAYA EN LA LISTA) PERO USAMOS EXPRESION LANDA
-                    //PORQUE HAY QUE PASAR UN PARAMETRO. LA EXPRESION LANDA BUSCA LA COINCIDENCIA == DEL
-                    //TEXTO EXCRITO EN EL txtFiltro CON LO QUE CONTIENE EN LA COLUMNA Nombre --- OJO!!!!
-                    //LA COINCIDENCIA ES EXACTA, POR LO QUE TIENES QUE ESCRIBIR TODO EL NOMBRE Y EN EL 
-                    //MISMO FORMATO DE MAYUSCULAS Y MINUSCULAS
-                //-ESTE FILTRO ES PARA CUANDO SE QUIERE BUSCAR COINCIDENCIAS EN LAS COLUMNAS
-                //SIN TENER EN CUENTA MAYUSCULAS Y MINUSCULAS (SE PUEDE USAR ToUpper o ToLower):
+             //-ESTE FILTRO ES PARA CUANDO SE QUIERE BUSCAR ALGO EXPRESO EN UNA COLUMNA:
+             //listaFiltrada = listaPokemon.FindAll(x => x.Nombre == filtro);// ASIGNAMOS
+             //EL METODO FindAll (BUSCAR TODO LO QUE HAYA EN LA LISTA) PERO USAMOS EXPRESION LANDA
+             //PORQUE HAY QUE PASAR UN PARAMETRO. LA EXPRESION LANDA BUSCA LA COINCIDENCIA == DEL
+             //TEXTO EXCRITO EN EL txtFiltro CON LO QUE CONTIENE EN LA COLUMNA Nombre --- OJO!!!!
+             //LA COINCIDENCIA ES EXACTA, POR LO QUE TIENES QUE ESCRIBIR TODO EL NOMBRE Y EN EL 
+             //MISMO FORMATO DE MAYUSCULAS Y MINUSCULAS
+             //-ESTE FILTRO ES PARA CUANDO SE QUIERE BUSCAR COINCIDENCIAS EN LAS COLUMNAS
+             //SIN TENER EN CUENTA MAYUSCULAS Y MINUSCULAS (SE PUEDE USAR ToUpper o ToLower):
                 listaFiltrada = listaPokemon.FindAll(x => x.Nombre.ToUpper() == filtro.ToUpper());
                 //-ESTE FILTRO SE USA PARA QUE LO QUE SE ESTA BUSCANDO TENGA COINCIDENCIA EN
                 //UNA O VARIAS COLUMNAS (UNA CANDENA CONTIENE DENTRO DE OTRA CADENA):
@@ -238,6 +239,10 @@ namespace winform_app
             dgvPokemons.DataSource = null;// SIEMPRE HAY QUE INICIANIZARLO
             dgvPokemons.DataSource = listaFiltrada;//MUESTRA YA LA LISTA FILTRADA
             ocultarColumnas();
+        }
+        private void btnFiltro_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

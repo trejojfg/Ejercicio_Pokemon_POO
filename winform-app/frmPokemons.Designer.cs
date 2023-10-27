@@ -114,21 +114,22 @@ namespace winform_app
             this.lblFiltro.AutoSize = true;
             this.lblFiltro.Location = new System.Drawing.Point(19, 35);
             this.lblFiltro.Name = "lblFiltro";
-            this.lblFiltro.Size = new System.Drawing.Size(48, 20);
+            this.lblFiltro.Size = new System.Drawing.Size(103, 20);
             this.lblFiltro.TabIndex = 6;
-            this.lblFiltro.Text = "Filtro:";
+            this.lblFiltro.Text = "Filtro Rápido:";
             // 
             // txtFiltro
             // 
-            this.txtFiltro.Location = new System.Drawing.Point(73, 28);
+            this.txtFiltro.Location = new System.Drawing.Point(137, 29);
             this.txtFiltro.Name = "txtFiltro";
-            this.txtFiltro.Size = new System.Drawing.Size(307, 26);
+            this.txtFiltro.Size = new System.Drawing.Size(891, 26);
             this.txtFiltro.TabIndex = 7;
+            this.txtFiltro.TextChanged += new System.EventHandler(this.txtFiltro_TextChanged);
             // 
             // btnFiltro
             // 
             this.btnFiltro.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.btnFiltro.Location = new System.Drawing.Point(396, 23);
+            this.btnFiltro.Location = new System.Drawing.Point(1183, 458);
             this.btnFiltro.Name = "btnFiltro";
             this.btnFiltro.Size = new System.Drawing.Size(145, 37);
             this.btnFiltro.TabIndex = 8;
