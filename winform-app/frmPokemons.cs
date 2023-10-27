@@ -33,15 +33,20 @@ namespace winform_app
 
         private void dgvPokemons_SelectionChanged(object sender, EventArgs e)
         {
-            // PARA CAMBIAR LA IMAGEN SEGUN CAMBIAS DE FILA DE LA TABLA DE POKEMON
-            Pokemon seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem; // CREAMOS UNA VARIABLE,
-            // PARA GUARDAR  (DEL TIPO DATO POKEMON) DE LA LISTA POKEMON, LA FILA ACTUAL SELECCIONADA,
-            // DAME EL OBJETO/ITEM ENLAZADO (URL)
+            if (dgvPokemons.CurrentRow != null)
+            {//PARA QUITAR LA EXCEPCION DEL FILTRO, HACEMOS UN if PARA VALIDAR SI LA dgvPokemons
+            //ESTA VACIA, NO SE ROMPA Y CONTINUE CON EL FILTRO
+               
+                // PARA CAMBIAR LA IMAGEN SEGUN CAMBIAS DE FILA DE LA TABLA DE POKEMON
+                Pokemon seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem; // CREAMOS UNA VARIABLE,
+                // PARA GUARDAR  (DEL TIPO DATO POKEMON) DE LA LISTA POKEMON, LA FILA ACTUAL SELECCIONADA,
+                // DAME EL OBJETO/ITEM ENLAZADO (URL)
 
-            // PARA TERMINAR, CARGAMOS EN EL PBXPOKEMON LA IMAGEN SELECCIONADA.
-            // pbxPokemon.Load(seleccionado.UrlImagen);// AQUI SE TERMINARIA.
-            cargarImagen(seleccionado.UrlImagen);// SE USA EL METODO cargarImagen
+                // PARA TERMINAR, CARGAMOS EN EL PBXPOKEMON LA IMAGEN SELECCIONADA.
+                // pbxPokemon.Load(seleccionado.UrlImagen);// AQUI SE TERMINARIA.
+                cargarImagen(seleccionado.UrlImagen);// SE USA EL METODO cargarImagen
 
+            }
         }
                                     // PERO
             // PARA QUE NO HAYA ERROR AL CARGAR LA IMAGEN (YA NO EXITE LA IMAGEN, LA URL DA FALLO,...)
@@ -74,12 +79,8 @@ namespace winform_app
             try
             {
                 listaPokemon = negocio.listar(); // CARGAMOS LA LISTA
-                dgvPokemons.DataSource = negocio.listar(); // LA MOSTRAMOS EN DATAGRIDVIEW CON LA URL DE LA IMAGEN
-                dgvPokemons.Columns["UrlImagen"].Visible = false; // OCULTAMOS LA COLUMNA DE LA URL PORQUE NO ES NECESARIA
-                // pbxPokemon.Load(listaPokemon[0].UrlImagen); // CUANDO SE CARGA EL PBXPOKEMON, SE CARGA CON LA
-                dgvPokemons.Columns["Id"].Visible = false; // OCULTAMOS TAMBIEN LA COLUMNA DE Id
-                // IMAGEN DEL PRIMEN POKEMON (DEL INDICE 0) DE LA LISTA POKEMON PERO
-
+                dgvPokemons.DataSource = listaPokemon; // LA MOSTRAMOS EN DATAGRIDVIEW CON LA URL DE LA IMAGEN
+                ocultarColumnas();//USAMOS EL METODO DE OCULTAR LAS COLUMNAS QUE NO NECESITO
                 // AL HACER EL METODO cargarImagen, SALVAMOS POSIBLES PROBLEMAS CON LAS IMAGENES
                 cargarImagen(listaPokemon[0].UrlImagen);
 
@@ -89,9 +90,16 @@ namespace winform_app
                 MessageBox.Show(ex.ToString());
             }
         }
+        private void ocultarColumnas()
+        {//METODO PARA OCLULTAR LAS COLUMNAS DEL DGV QUE NO QUIERO MOSTRAR O NO NECESITO
+            dgvPokemons.Columns["UrlImagen"].Visible = false; // OCULTAMOS LA COLUMNA DE LA URL PORQUE NO ES NECESARIA
+            // pbxPokemon.Load(listaPokemon[0].UrlImagen); // CUANDO SE CARGA EL PBXPOKEMON, SE CARGA CON LA
+            dgvPokemons.Columns["Id"].Visible = false; // OCULTAMOS TAMBIEN LA COLUMNA DE Id
+            // IMAGEN DEL PRIMEN POKEMON (DEL INDICE 0) DE LA LISTA POKEMON PERO
 
-    // PARA AGREGAR UN NUEVO ALTA DE POKEMON, AGREGAMOS BOTON CON UNA FUNCION DE ABRIR UNA 
-    // NUEVA VENTANA frmAltaPokemon
+        }
+        // PARA AGREGAR UN NUEVO ALTA DE POKEMON, AGREGAMOS BOTON CON UNA FUNCION DE ABRIR UNA 
+        // NUEVA VENTANA frmAltaPokemon
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             frmAltaPokemon alta = new frmAltaPokemon();
@@ -192,6 +200,44 @@ namespace winform_app
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        private void btnFiltro_Click(object sender, EventArgs e)
+        {
+            List<Pokemon> listaFiltrada;// CREAMOS UNA NUEVA LISTA listaFiltrada CARGADA CON 
+            //TODOS LOS POKEMOS DE LA ListPokemon (ES UN ATRIBUTO ESTA LISTA)
+            string filtro = txtFiltro.Text;//CREAMOS VARIABLE PARA ALOJAR LO QUE SE ESCRIBA
+            //EN EL CAMPO DEL FILTRO
+
+            //PARA VALIDAR EL FILTRO Y VOLVER AL PRINCIPIO SIN FILTROS CON LA LISTA ORIGINAL
+            //USAMOS EL if SOBRE EL CAMPO DEL FILTRO SI ESTA VACIO O NO
+            if (filtro != "")
+            {// HAY VARIOS FILTROS, PERO LOS MAS COMUNES SON:
+                //-ESTE FILTRO ES PARA CUANDO SE QUIERE BUSCAR ALGO EXPRESO EN UNA COLUMNA:
+              //listaFiltrada = listaPokemon.FindAll(x => x.Nombre == filtro);// ASIGNAMOS
+                    //EL METODO FindAll (BUSCAR TODO LO QUE HAYA EN LA LISTA) PERO USAMOS EXPRESION LANDA
+                    //PORQUE HAY QUE PASAR UN PARAMETRO. LA EXPRESION LANDA BUSCA LA COINCIDENCIA == DEL
+                    //TEXTO EXCRITO EN EL txtFiltro CON LO QUE CONTIENE EN LA COLUMNA Nombre --- OJO!!!!
+                    //LA COINCIDENCIA ES EXACTA, POR LO QUE TIENES QUE ESCRIBIR TODO EL NOMBRE Y EN EL 
+                    //MISMO FORMATO DE MAYUSCULAS Y MINUSCULAS
+                //-ESTE FILTRO ES PARA CUANDO SE QUIERE BUSCAR COINCIDENCIAS EN LAS COLUMNAS
+                //SIN TENER EN CUENTA MAYUSCULAS Y MINUSCULAS (SE PUEDE USAR ToUpper o ToLower):
+                listaFiltrada = listaPokemon.FindAll(x => x.Nombre.ToUpper() == filtro.ToUpper());
+                //-ESTE FILTRO SE USA PARA QUE LO QUE SE ESTA BUSCANDO TENGA COINCIDENCIA EN
+                //UNA O VARIAS COLUMNAS (UNA CANDENA CONTIENE DENTRO DE OTRA CADENA):
+                listaFiltrada = listaPokemon.FindAll(x => x.Nombre.ToUpper().Contains(filtro.ToUpper()) || x.Tipo.Descripcion.ToUpper().Contains(filtro.ToUpper()));
+
+            }
+            else
+            {
+                listaFiltrada = listaPokemon;//SI EL CAMPO ESTA VACIO, CARGA NUEVAMENTE LA LISTA ORIGINAL
+            }
+
+
+            //AHORA ACTUALIZAMOS EL LISTADO CON EL FILTRO
+            dgvPokemons.DataSource = null;// SIEMPRE HAY QUE INICIANIZARLO
+            dgvPokemons.DataSource = listaFiltrada;//MUESTRA YA LA LISTA FILTRADA
+            ocultarColumnas();
         }
     }
 }
