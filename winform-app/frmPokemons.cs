@@ -111,20 +111,81 @@ namespace winform_app
             modificar.ShowDialog();
             cargar();
         }
-
+        //PARA ELIMINAR FISICAMENTE Y DEFINITAVAMENTE UN POKEMON DE LA BD, USAMOS EL METODO
+        // CUANDO HEMOS SELECCIONADO EL POKEMON Y DAMOS AL BOTON btnEliminarFisica
         private void btnEliminarFisica_Click(object sender, EventArgs e)
+            //LO COMENTAMOS TODO PORQUE INCLUIMOS ESTA FUNCION DENTRO DEL METODO eliminar
+
+        {
+            //PokemonNegocio negocio = new PokemonNegocio();
+            //Pokemon seleccionado;//CREAMOS LA VARIABLE seleccionado PARA IDENTIFICAR EL id DE
+            // LA BD QUE QUEREMOS ELIMINAR
+            //try
+            //{               //UTILIZAMOS EL DialogResult PARA GUARDAR EL RESULTADO A LA PREGUNTA DE ELIMINAR
+            //DialogResult respuesta = MessageBox.Show("¿Estas seguro de ELIMINAR el Pokemon?", "Eliminando....", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            //if (respuesta == DialogResult.Yes)//CONDICIONAMOS LA CONTESTACION A Yes/No
+            //{          //PARA ELIMINAR EL POKEMON SELECCIONADO TOTALMENTE DE LA BD
+            //seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem;//EL id DEL POKEMON SELECCIONADO
+            //negocio.eliminar(seleccionado.Id);//PASAMOS POR PARAMETRO EL id AL METODO ELIMINAR Y LO ELIMINA
+            //cargar();
+            //}
+            //}
+            //catch (Exception ex)
+            //{
+            //MessageBox.Show(ex.ToString());
+            //}
+            eliminar();
+        }
+
+
+        //PARA ELIMINAR LOGICAMENTE PERO NO DEFINITAVAMENTE, ES DECIR, INACTIVAR UN POKEMON DE LA BD
+        // EN LA COLUMNA ACTIVO CON VALOR A CERO, USAMOS ESTE METODO CUANDO HEMOS SELECCIONADO
+        // EL POKEMON Y DAMOS AL BOTON btnEliminarLogico
+        private void btnEliminarLogico_Click(object sender, EventArgs e)
+            //LO COMENTAMOS TODO PORQUE INCLUIMOS ESTA FUNCION DENTRO DEL METODO eliminar
+        {
+            //PokemonNegocio negocio = new PokemonNegocio();
+            //Pokemon seleccionado;//CREAMOS LA VARIABLE seleccionado PARA IDENTIFICAR EL id DE
+                                    // LA BD QUE QUEREMOS INACTIVAR
+            //try
+            //{   //UTILIZAMOS EL DialogResult PARA GUARDAR EL RESULTADO A LA PREGUNTA DE ELIMINAR
+                //DialogResult respuesta = MessageBox.Show("¿Estas seguro de ELIMINAR el Pokemon?", "Eliminando....", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                //if (respuesta == DialogResult.Yes)//CONDICIONAMOS LA CONTESTACION A Yes/No
+                //{                       //PARA ELIMINAR EL POKEMON SELECCIONADO TOTALMENTE DE LA BD
+                    //seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem;//EL id DEL POKEMON SELECCIONADO
+                    //negocio.eliminar(seleccionado.Id);//PASAMOS POR PARAMETRO EL id AL METODO ELIMINAR Y LO ELIMINA
+                //cargar();
+                //}
+            //}
+            //catch (Exception ex)
+            //{
+                //MessageBox.Show(ex.ToString());
+            //}
+            eliminar(true);
+        }
+        // CREAMOS EL METODO ELIMINAR PARA INCLUIR LAS FUNCIONES EliminarFisica Y EliminarLogico
+        private void eliminar (bool logico = false)
         {
             PokemonNegocio negocio = new PokemonNegocio();
             Pokemon seleccionado;//CREAMOS LA VARIABLE seleccionado PARA IDENTIFICAR EL id DE
-            // LA BD QUE QUEREMOS ELIMINAR
+            // LA BD QUE QUEREMOS ELIMINAR o INACTIVAR
             try
             {//UTILIZAMOS EL DialogResult PARA GUARDAR EL RESULTADO A LA PREGUNTA DE ELIMINAR
                 DialogResult respuesta = MessageBox.Show("¿Estas seguro de ELIMINAR el Pokemon?", "Eliminando....", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (respuesta == DialogResult.Yes)//CONDICIONAMOS LA CONTESTACION A Yes/No
-                { //PARA ELIMINAR EL POKEMON SELECCIONADO TOTALMENTE DE LA BD
-                seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem;//EL id DEL POKEMON SELECCIONADO
-                negocio.eliminar(seleccionado.Id);//PASAMOS POR PARAMETRO EL id AL METODO ELIMINAR Y LO ELIMINA
-                cargar();
+                { 
+                    seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem;//EL id DEL POKEMON SELECCIONADO
+
+                    if (logico) // PARA INACTIVAR EL POKEMON SELECCIONADO EN LA COLUMNA ACTIVO DE LA BD
+                    {
+                        negocio.eliminarLogico(seleccionado.Id);//PASAMOS POR PARAMETRO EL id AL METODO ELIMINAR Y LO INACTIVA
+                    }
+                    else //PARA ELIMINAR EL POKEMON SELECCIONADO TOTALMENTE DE LA BD
+                    {
+                        negocio.eliminar(seleccionado.Id);//PASAMOS POR PARAMETRO EL id AL METODO ELIMINAR Y LO ELIMINA
+                    }
+                    
+                    cargar();
                 }
             }
             catch (Exception ex)

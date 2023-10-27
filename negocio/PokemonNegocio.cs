@@ -31,7 +31,7 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
                 //  b) CON TYPE.STOREDPROCEDURE - SE MANDA CON UN PROCEDIMIENTO ALMACENADO (FUNCION)
                 comando.CommandType = System.Data.CommandType.Text;
                 // 3º REALIZAMOS LA CONSULTA SQL
-                comando.CommandText = "Select Numero, Nombre, P.Descripcion, UrlImagen, E.Descripcion Tipo, D.Descripcion Debilidad, P.IdTipo, P.IdDebilidad, P.Id From POKEMONS P, ELEMENTOS E, ELEMENTOS D Where E.Id = P.IdTipo AND D.Id = P.IdDebilidad";
+                comando.CommandText = "Select Numero, Nombre, P.Descripcion, UrlImagen, E.Descripcion Tipo, D.Descripcion Debilidad, P.IdTipo, P.IdDebilidad, P.Id From POKEMONS P, ELEMENTOS E, ELEMENTOS D Where E.Id = P.IdTipo AND D.Id = P.IdDebilidad AND P.Activo = 1";
                 // 4º LLAMAR A LA EJECUCION DEL COMANDO DE CONEXION
                 comando.Connection = conexion;
                 // 5º ABRIMOS LA CONEXION
@@ -150,14 +150,29 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
             }
         }
         public void eliminar(int id)
-        {// ESTE METODO DE eliminar SIRVE PARA ELIMINAR DE LA BD LOS DATOS TOTALMENTE PARA SIEMPRE
-         // DEL POKEMON CON id ELEGIDO Y PASADO POR PARAMETRO
+        {// ESTE METODO DE eliminar SIRVE PARA ELIMINAR FISICAMENTE DE LA BD LOS DATOS
+         // PARA SIEMPRE DEL POKEMON CON id ELEGIDO Y PASADO POR PARAMETRO
             try
             {
                 AccesoDatos datos = new AccesoDatos();//ACCEDEMOS A LA BD
                 datos.setearConsulta("delete from POKEMONS where id = @id");//SELECCIONAMOS LA CONSULTA
                 datos.setearParametro("@id", id);//SELECCIONAMOS POR PARAMETRO EL id QUE VAMOS A ELIMINAR
                 datos.ejecutarAccion();//EJECUTAMOS LA ACCION DE ELIMINAR
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public void eliminarLogico(int id)
+        {
+            try
+            {
+                AccesoDatos datos = new AccesoDatos();
+                datos.setearConsulta("update POKEMONS set Activo = 0 Where id = @id");
+                datos.setearParametro("@id", id);
+                datos.ejecutarAccion();
             }
             catch (Exception ex)
             {
