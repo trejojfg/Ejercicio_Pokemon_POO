@@ -29,6 +29,10 @@ namespace winform_app
 
             // UTILIZAMOS LA FUNCION cargar, PARA UTILIZARLA SIEMPRE QUE CARGUE EL FORMULARIO
             cargar();
+            // CARGAMOS EL cboCampo DE LAS BUSQUEDA AVANZADA
+            cboCampo.Items.Add("Número");
+            cboCampo.Items.Add("Nombre");
+            cboCampo.Items.Add("Descripción");
         }
 
         private void dgvPokemons_SelectionChanged(object sender, EventArgs e)
@@ -240,9 +244,41 @@ namespace winform_app
             dgvPokemons.DataSource = listaFiltrada;//MUESTRA YA LA LISTA FILTRADA
             ocultarColumnas();
         }
+        // EMPEZAMOS CON SELECCIONAR LA PRIMERA OPCION DEL FILTRO AVANZADO
+        private void cboCampo_SelectedIndexChanged(object sender, EventArgs e)
+        {// SELECCIONAMOS DE LA LISTA cboCampo
+            string opcion = cboCampo.SelectedItem.ToString();//ASIGNAMOS SELECCION
+            if(opcion == "Número")// CONDICIONAMOS LA SELECCION A LA PRIMERA OPCION "Número"
+                // PARA ELEGIR LA SIGUIENTE OPCION
+            {
+                cboCriterio.Items.Clear();
+                cboCriterio.Items.Add("Mayor a");
+                cboCriterio.Items.Add("Menor a");
+                cboCriterio.Items.Add("Igual a");
+            }
+            else // SINO ES LA OPCION "Nombre" Y SE CARGAN LAS SIGUIENTES OPCIONES
+            {
+                cboCriterio.Items.Clear();
+                cboCriterio.Items.Add("Comienza por");
+                cboCriterio.Items.Add("Termina por");
+                cboCriterio.Items.Add("Contiene");
+            }
+        }
         private void btnFiltro_Click(object sender, EventArgs e)
         {
+            PokemonNegocio negocio = new PokemonNegocio();
+            try
+            {
+                string campo = cboCampo.SelectedItem.ToString();
+                string criterio = cboCriterio.SelectedItem.ToString();
+                string filtro = txtFiltroAvanzado.Text;
+                dgvPokemons.DataSource = negocio.filtrar(campo, criterio, filtro);
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }

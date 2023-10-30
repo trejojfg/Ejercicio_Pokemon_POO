@@ -30,7 +30,7 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
                 //  a) CON TYPE.TEXT - SE MANDA EN FORMA DE TEXTO (SENTENCIA DE SQL)
                 //  b) CON TYPE.STOREDPROCEDURE - SE MANDA CON UN PROCEDIMIENTO ALMACENADO (FUNCION)
                 comando.CommandType = System.Data.CommandType.Text;
-                // 3º REALIZAMOS LA CONSULTA SQL
+                // 3º REALIZAMOS LA CONSULTA SQL(VAMOS AMPLIANDO LA CONSULTA A MEDIDA QUE SE VAN INCREMENTANDO LOS CRITERIOS DE SELECCION, BUSQUEDA, ELIMINACION,...)
                 comando.CommandText = "Select Numero, Nombre, P.Descripcion, UrlImagen, E.Descripcion Tipo, D.Descripcion Debilidad, P.IdTipo, P.IdDebilidad, P.Id From POKEMONS P, ELEMENTOS E, ELEMENTOS D Where E.Id = P.IdTipo AND D.Id = P.IdDebilidad AND P.Activo = 1";
                 // 4º LLAMAR A LA EJECUCION DEL COMANDO DE CONEXION
                 comando.Connection = conexion;
@@ -166,19 +166,126 @@ namespace negocio // CAMBIAMOS winform-app POR EL NUEVO NAMESPACE negocio
             }
         }
         public void eliminarLogico(int id)
-        {
+        {//PARA ELIMINAR UN POKEMON DE FORMA LOGICA, ES MEDIANTE LA ACTIVIACION O NO DE UNA
+        // COLUMNA, ES DECIR, SERA DADO DE BAJA EN LA CONSULTA, PERO NO EN LA BD
             try
             {
-                AccesoDatos datos = new AccesoDatos();
-                datos.setearConsulta("update POKEMONS set Activo = 0 Where id = @id");
-                datos.setearParametro("@id", id);
-                datos.ejecutarAccion();
+                AccesoDatos datos = new AccesoDatos();//ACCEDEMOS A LA BD
+                datos.setearConsulta("update POKEMONS set Activo = 0 Where id = @id");//SELECCIONAMOS LA CONSULTA
+                datos.setearParametro("@id", id);//SELECCIONAMOS POR PARAMETRO EL id QUE VAMOS A ELIMINAR,
+                //PERO CON EL DETALLE QUE SE ELIMINARA DE LA CONSULTA Y NO DE LA BD
+                datos.ejecutarAccion();//EJECUTAMOS LA ACCION DE "ELIMINAR"
             }
             catch (Exception ex)
             {
 
                 throw ex;
             }
+        }
+
+        public List<Pokemon> filtrar(string campo, string criterio, string filtro)
+        {//SE CREA LA BUSQUEDA AVANZADA, QUE SERA PARA 3 CRITERIOS DE BUSQUEDA EN LA BD
+            List<Pokemon> lista = new List<Pokemon>();//CREAMOS UNA LISTA NUEVA
+            AccesoDatos datos = new AccesoDatos();//ACCEDEMOS A LA BD
+            try
+            {// A LA CONSULTA LE CONCATENAMOS CON "and_" Y DEJAMOS DINAMICAMENTE Y CONCATENADA
+            // LAS ELECCIONES QUE SE HAGAN EN LOS COMBOX.
+                string consulta = "Select Numero, Nombre, P.Descripcion, UrlImagen, E.Descripcion Tipo, D.Descripcion Debilidad, P.IdTipo, P.IdDebilidad, P.Id From POKEMONS P, ELEMENTOS E, ELEMENTOS D Where E.Id = P.IdTipo AND D.Id = P.IdDebilidad AND P.Activo = 1 AND ";
+                // ELEGIMOS LA OPCION DEL "switch" PARA HACER LAS ELECCIONES (tambien se pudo usar el if)
+                switch (campo)
+                {
+                    case "Número":
+                        switch (criterio)
+                        {
+                                case "Mayor a":
+                                    consulta += "Numero > " + filtro;
+                                    break;
+                                case "Menor a":
+                                    consulta += "Numero < " + filtro;
+                                    break;
+                                default:
+                                    consulta += "Numero = " + filtro;
+                                    break;
+                        }
+                        break;
+                    case "Nombre":
+                        switch (criterio)
+                        {
+                            case "Comienza por":
+                                consulta += "Nombre like '" + filtro + "%'";
+                                break;
+                            case "Termina por":
+                                consulta += "Nombre like '%" + filtro +"'";
+                                break;
+                            default:
+                                consulta += "Nombre like '%" + filtro + "%'";
+                                break;
+                        }
+                        break;
+                    default:
+                        switch (criterio)
+                        {
+                            case "Comienza por":
+                                consulta += "P.Descripcion like '" + filtro + "%'";
+                                break;
+                            case "Termina por":
+                                consulta += "P.Descripcion like '%" + filtro + "'";
+                                break;
+                            default:
+                                consulta += "P.Descripcion like '%" + filtro + "%'";
+                                break;
+                        }
+                        break;
+                    
+                }
+
+                datos.setearConsulta(consulta);
+                datos.ejecutarLectura();
+                //AÑADIMOS LA FUNCIONALIDAD DE "lectura" EN LA FUNCION DE LA LISTA INICIAL 
+                while (datos.Lector.Read())
+                {
+                    // CREAMOS UNA VARIABLE PARA CARGAR CON LOS DATOS DEL LECTOR EN EL OBJETO POKEMON
+                    Pokemon aux = new Pokemon();
+                    aux.Id = (int)datos.Lector["Id"];//NOS TRAEMOS EL Id DEL POKEMON PARA USARLO AL MODIFICAR POKEMON
+
+                    // SE PUEDE CARGAR DE DOS FORMAS CON EL TIPO DE DATO CORRECTO SQL-VS
+                    // a) CON EL INDICE DE LA COLUMNA
+                    aux.Numero = datos.Lector.GetInt32(0);// ESTO ES UN INT EN VS Y GETINT32 EN SQL
+                    // b) CON EL NOMBRE DE LA COLUMNA
+                    aux.Nombre = (string)datos.Lector["Nombre"];// SE PONE EL NOMBRE DE LA COLUMNA QUE SE PUSO EN LA SENTENCIA A LA HORA DE SOLICITAR LOS DATOS EN EL COMMAND
+                    aux.Descripcion = (string)datos.Lector["Descripcion"];
+
+                    // HAY DOS MANERAS DE VALIDACION DE LOS DATOS CON UN null DE UNA COLUMNA,
+                    // CUANDO EN DB DE SQL TIENE NULL Y EL CAMPO ADMITE NULL:
+                    // a) UTILIZAMOS UN if CON NEGACION ! CONTRA LA COLUMNA
+                    // if(!(lector.IsDBNull(lector.GetOrdinal("UrlImagen"))))// CONSULTA: si no es null en la columna UrlImagen
+                    //    aux.UrlImagen = (string)lector["UrlImagen"];// condicional SI - EJECUTA ESTA ACCION
+                    // b) UTILIZAMOS UN if CON NEGACION ! PERO DIRECTAMENTE CONTRA EL OBJETO 
+                    if (!(datos.Lector["UrlImagen"] is DBNull))// CONSULTA: si no es null el objeto UrlImagen
+                        aux.UrlImagen = (string)datos.Lector["UrlImagen"];// condicional SI - EJECUTA ESTA ACCION
+
+                    aux.Tipo = new Elemento(); // CREAMOS LA VARIABLE aux.Tipo DEL OBJETO ELEMENTO
+                    aux.Tipo.Id = (int)datos.Lector["idTipo"]; // SEÑALAMOS QUE ES LA COLUMNA IdTipo (PARA modificar EL pokemon)
+                    aux.Tipo.Descripcion = (string)datos.Lector["Tipo"];// SEÑALAMOS QUE ES LA COLUMNA Descripcion DE LA TABLA ELEMENTO
+                    aux.Debilidad = new Elemento(); // CREAMOS LA VARIABLE aux.Debilidad DEL OBJETO ELEMENTO
+                    aux.Debilidad.Id = (int)datos.Lector["idDebilidad"];// SEÑALAMOS QUE ES LA COMUMNA IdDebilidad (PARA modificar EL pokemon)
+                    aux.Debilidad.Descripcion = (string)datos.Lector["Debilidad"]; // SEÑALAMOS QUE ES LA COLUMNA Descripcion DE LA TABLA ELEMENTO
+
+                    // GUARDAMOS LA FILA DE LA VARIABLE "AUX" EN LA LISTA "lista" HASTA QUE YA NO
+                    // HAYA MAS DATOS -- y ---> WHILE = FALSE
+                    lista.Add(aux);
+                }
+
+                // NOS DEVULVE LA LISTA RELLENADA CON LOS DATOS Y SELECCIONABLE
+                return lista;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
+            
         }
     }
 }
