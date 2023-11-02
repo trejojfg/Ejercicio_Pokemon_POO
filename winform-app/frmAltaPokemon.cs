@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using dominio; // INCLUIMOS EL using dominio PARA PODER UTILIZAR EL OBJETO POKEMON
 using negocio; // INCLUIMOS EL using negocio PARA PODER UTILIZAR EL OBJETO POKEMONNEGOCIO
 using System.Configuration;// AÑADIMOS ESTE using PARA PODER GUARDAR LA IMAGEN EN LA BD MEDIANTE REFERENCIAS
-using System.IO;// SE CREA LA CLASE File, QUE ES ESTATICA, PARA PODER GUARDAR LA IMAGEN EN LA BD
+using System.IO;// SE CREA LA CLASE File, QUE ES ESTATICA, PARA PODER GUARDAR LA IMAGEN/ARCHIVO
 
 namespace winform_app
 {
@@ -86,9 +86,11 @@ namespace winform_app
                 // GUARDO LA IMAGEN SI LA LEVANTO LOCALMENTE Y CONDICIONO QUE TENGA HTTP PARA GUARDAR
                 if (archivo != null && !(txtUrlImagen.Text.ToUpper().Contains("HTTP")))
                 {// TRAEMOS DE LA FUNCION btnAgregarImagen_Click PARA GUARDAR LA IMAGEN
-                File.Copy(archivo.FileName, ConfigurationManager.AppSettings["poke-app-img"] + archivo.SafeFileName);
-                }
-                
+                File.Copy(archivo.FileName, ConfigurationManager.AppSettings["carpetaImagen"] + archivo.SafeFileName);
+                }// HAY QUE FORZAR A File Y CREAR EL System.IO
+                 //HAY QUE IR A App.Config PARA INCLUIR <appSettings> Y CREAR UNA Key Y UNA
+                 //CARPETA DONDE GUARDAR LAS IMAGENES/ARCHIVOS
+
                 Close();
 
             }
@@ -176,11 +178,11 @@ namespace winform_app
 
 
                 //  -PARA LEVANTAR LOCALMENTE LA IMAGEN Y GUARDAR LA RUTA EN LA APP
-                //File.Copy(archivo.FileName, ConfigurationManager.AppSettings["poke-app-img"] + archivo.SafeFileName);
+                //File.Copy(archivo.FileName, ConfigurationManager.AppSettings["carpetaImagen"] + archivo.SafeFileName);
                     //FORZAMOS EL OBJETO File Y CREAMOS SU Using IO. LUEGO USAMOS EL METODO
                     // ConfigurationManager.AppSetting (INCLUYENDO LA Key DE LA RUTA DE LA IMAGEN.
                 //  -PARA LEVANTAR LA IMAGEN Y GUARDAR EL ARCHIVO EN LA DB CON VALIDACION, LO 
-                // TENEMOS QUE INCLUIR EN EL METODO cargarImagen
+                // TENEMOS QUE INCLUIR EN EL METODO btnAceptar_Click
 
 
             }
