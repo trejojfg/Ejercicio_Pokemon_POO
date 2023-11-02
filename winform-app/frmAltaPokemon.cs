@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using dominio; // INCLUIMOS EL using dominio PARA PODER UTILIZAR EL OBJETO POKEMON
 using negocio; // INCLUIMOS EL using negocio PARA PODER UTILIZAR EL OBJETO POKEMONNEGOCIO
+using System.Configuration;// AÑADIMOS ESTE using PARA PODER GUARDAR LA IMAGEN EN LA BD MEDIANTE REFERENCIAS
+using System.IO;// SE CREA LA CLASE File, QUE ES ESTATICA, PARA PODER GUARDAR LA IMAGEN EN LA BD
 
 namespace winform_app
 {
@@ -18,6 +20,8 @@ namespace winform_app
         // A LA HORA DE DISTIRNGUIR ENTRE agregar (VALOR A null) Y modificar (!= null YA QUE NOS
         // TRAEMOS LOS VALORES DE LA BD).
         private Pokemon pokemon = null;
+        // CREAMOS UN ATRIBUTO PRIVADO DEL OBJETO OpenFileDialog, PARA PODER GUARDAR LA IMAGEN EN LOCAL
+        private OpenFileDialog archivo = null;
         public frmAltaPokemon()
         {
             InitializeComponent();
@@ -79,6 +83,12 @@ namespace winform_app
                     MessageBox.Show("Correctamente Agregado");
                     // IGUAL QUE agregar PERO CON modificar
                 }
+                // GUARDO LA IMAGEN SI LA LEVANTO LOCALMENTE Y CONDICIONO QUE TENGA HTTP PARA GUARDAR
+                if (archivo != null && !(txtUrlImagen.Text.ToUpper().Contains("HTTP")))
+                {// TRAEMOS DE LA FUNCION btnAgregarImagen_Click PARA GUARDAR LA IMAGEN
+                File.Copy(archivo.FileName, ConfigurationManager.AppSettings["poke-app-img"] + archivo.SafeFileName);
+                }
+                
                 Close();
 
             }
@@ -137,7 +147,8 @@ namespace winform_app
             cargarImagen(txtUrlImagen.Text);// CARGAMOS LA IMAGEN QUE HAY DENTRO DEL txtUrlImagen
         }
         private void cargarImagen(string imagen)
-        {
+        {// CREAMOS EL METODO cargarImagen PARA CARGAR LA IMAGEN SI LA TENEMOS O TENEMOS LA URL,
+            // O SI NO LA TENEMOS, CARGAR UNA IMAGEN STANDAR
             try
             {
                 pbxPokemon.Load(imagen);
@@ -146,6 +157,34 @@ namespace winform_app
             {
                 pbxPokemon.Load("https://enteracloud.mx/wp-content/uploads/2021/08/placeholder.png");
             }
+        }
+
+        private void btnAgregarImagen_Click(object sender, EventArgs e)
+        {// AL DAR AL BOTON " + " PARA AGREGAR IMAGEN TENEMOS QUE CREAR EL OBJETO "archivo" QUE
+            // PERTENECE AL OBEJTO OpenFileDialog (ABRIR UNA VENTANA DE DIALOGO)
+            // OpenFileDialog archivo = new OpenFileDialog();
+            
+            archivo = new OpenFileDialog();// ARRANCAMOS EL ATRIBUTO OpenFileDialog en NULL
+
+            archivo.Filter = "jpg|*.jpg;|png|*.png";//FILTRAMOS LOS ARCHIVOS QUE QUEREMOS QUE APAREZCAN SEGUN FORMATO
+            if(archivo.ShowDialog() == DialogResult.OK)//PARA GUARDAR LA IMAGEN, TENEMOS QUE 
+                //DAR AL OK DE LA VENTANA DE DIALOGO
+            {
+                txtUrlImagen.Text = archivo.FileName;//ASIGNAMOS IMAGEN AL CUADRO DE TEXTO DE LA UrlImagen
+                // CON EL ARCHIVO QUE HEMOS SELECCIONADO
+                cargarImagen(archivo.FileName);//CARGAMOS LA IMAGEN, CON LA IMAGEN QUE HABIAMOS SELECCIONADO
+
+
+                //  -PARA LEVANTAR LOCALMENTE LA IMAGEN Y GUARDAR LA RUTA EN LA APP
+                //File.Copy(archivo.FileName, ConfigurationManager.AppSettings["poke-app-img"] + archivo.SafeFileName);
+                    //FORZAMOS EL OBJETO File Y CREAMOS SU Using IO. LUEGO USAMOS EL METODO
+                    // ConfigurationManager.AppSetting (INCLUYENDO LA Key DE LA RUTA DE LA IMAGEN.
+                //  -PARA LEVANTAR LA IMAGEN Y GUARDAR EL ARCHIVO EN LA DB CON VALIDACION, LO 
+                // TENEMOS QUE INCLUIR EN EL METODO cargarImagen
+
+
+            }
+
         }
     }
 }

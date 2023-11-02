@@ -43,6 +43,7 @@
             this.lblUrlImagen = new System.Windows.Forms.Label();
             this.txtUrlImagen = new System.Windows.Forms.TextBox();
             this.pbxPokemon = new System.Windows.Forms.PictureBox();
+            this.btnAgregarImagen = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbxPokemon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -176,12 +177,24 @@
             this.pbxPokemon.TabIndex = 14;
             this.pbxPokemon.TabStop = false;
             // 
+            // btnAgregarImagen
+            // 
+            this.btnAgregarImagen.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.btnAgregarImagen.Location = new System.Drawing.Point(337, 190);
+            this.btnAgregarImagen.Name = "btnAgregarImagen";
+            this.btnAgregarImagen.Size = new System.Drawing.Size(41, 26);
+            this.btnAgregarImagen.TabIndex = 15;
+            this.btnAgregarImagen.Text = "+";
+            this.btnAgregarImagen.UseVisualStyleBackColor = false;
+            this.btnAgregarImagen.Click += new System.EventHandler(this.btnAgregarImagen_Click);
+            // 
             // frmAltaPokemon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.ClientSize = new System.Drawing.Size(822, 400);
+            this.Controls.Add(this.btnAgregarImagen);
             this.Controls.Add(this.pbxPokemon);
             this.Controls.Add(this.txtUrlImagen);
             this.Controls.Add(this.lblUrlImagen);
@@ -223,5 +236,6 @@
         private System.Windows.Forms.Label lblUrlImagen;
         private System.Windows.Forms.TextBox txtUrlImagen;
         private System.Windows.Forms.PictureBox pbxPokemon;
+        private System.Windows.Forms.Button btnAgregarImagen;
     }
 }
