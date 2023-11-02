@@ -264,15 +264,65 @@ namespace winform_app
                 cboCriterio.Items.Add("Contiene");
             }
         }
+        private bool validarfiltro()
+        {// VALIDAMOS LA BUSQUEDA CON CONDICIONANTES SEGUN SEA LO SELECCIONADO
+           if (cboCampo.SelectedIndex < 0)
+            {//SI LA SELECCION EN EL Campo ES MENOR A 0, ES DECIR, COMO cboCampo ES UNA COLECCION
+                // LOS VALORES TIENEN QUE SER MAYORES QUE 0, SI FUERA MENOR ES QUE NO HAY SELECCION
+                // ESTO ES COMO PONER == -1
+                MessageBox.Show("Por favor, para filtrar seleccione un campo");
+                return true;//COMO LA FUNCION ES BULEANA, DEVUELVE "verdadero" PARA NO CONTINUAR LA VALIDACION
+            }
+           if (cboCriterio.SelectedIndex < 0)
+            {//SI LA SELECCION EN EL Criterio ES MENOR A 0, ES DECIR, COMO cboCriterio ES UNA COLECCION
+                // LOS VALORES TIENEN QUE SER MAYORES QUE 0, SI FUERA MENOR ES QUE NO HAY SELECCION
+                // ESTO ES COMO PONER == -1
+                MessageBox.Show("Por favor, para filtrar selecciona un criterio");
+                return true;//COMO LA FUNCION ES BULEANA, DEVUELVE "verdadero" PARA NO CONTINUAR LA VALIDACION
+            }
+           if (cboCampo.SelectedItem.ToString() == "Número")
+            {//SI LA SELECCION EN EL Campo ES IGUAL A "Número", ENTONCES SE ABRE OTRA VALIDACION
+                if(string.IsNullOrEmpty(txtFiltroAvanzado.Text))
+                {//SI EN EL CAMPO filtro ESTA VACIO O NULO, ENTONCES NO PASA LA VALIDACION
+                    MessageBox.Show("Debes cargar el filtro para numéricos...");
+                    return true;//COMO LA FUNCION ES BULEANA, DEVUELVE "verdadero" PARA NO CONTINUAR LA VALIDACION
+                }
+                if (!(soloNumeros(txtFiltroAvanzado.Text)))
+                {// UTILIZAMOS LA FUNCION soloNumeros PARA VALIDAR SI EL CAMPO filtro HAY ALGUN CARACTER
+                 // QUE NO SEA NUMERO, ENTONCES NO PASARIA LA VALIDACION
+                    MessageBox.Show("Por favor, ingrese un campo numérico......");
+                    return true;//COMO LA FUNCION ES BULEANA, DEVUELVE "verdadero" PARA NO CONTINUAR LA VALIDACION
+                }
+            }
+            
+            return false;//COMO LA FUNCION ES BULEANA, DEVUELVE "falso" PARA CONTINUAR CON LA FUNCION DE FILTRAR
+            // YA QUE HA PASADO TODAS LAS VALIDACIONES REQUERIDAS
+        }
+        private bool soloNumeros(string cadena)
+        {// CREAMOS LA FUNCION PARA QUE RECORRA TODOS LOS CARACTERES INTRODUCIDOS EN EL txtfiltroAvanzado
+            foreach (char caracter in cadena)
+            {// COMPARA CARACTER A CARACTER EN BUSCA QUE NO HAY NINGUNO QUE NO SEA NUMERO
+                if (!(char.IsNumber(caracter)))
+                {
+                    return false;//COMO LA FUNCION ES BULEANA, DEVUELVE "falso" PARA CONTINUAR LA VALIDACION
+                }
+            }
+            return true;//COMO LA FUNCION ES BULEANA, DEVUELVE "verdadero" PARA NO CONTINUAR LA VALIDACION
+            //YA QUE HA ENCONTRADO ALGUN CARACTER QUE NO ES NUMERO
+        }
         private void btnFiltro_Click(object sender, EventArgs e)
-        {
+        {// SE CREA EL BOTON PARA FILTRAR, AL CUAL SE LE AÑADE LA FUNCION validarFiltro
             PokemonNegocio negocio = new PokemonNegocio();
             try
             {
-                string campo = cboCampo.SelectedItem.ToString();
-                string criterio = cboCriterio.SelectedItem.ToString();
-                string filtro = txtFiltroAvanzado.Text;
-                dgvPokemons.DataSource = negocio.filtrar(campo, criterio, filtro);
+                if (validarfiltro())// FUNCION PARA VALIDAR EL FILTRO
+                    return;
+
+                string campo = cboCampo.SelectedItem.ToString();//ASIGNAMOS CAMPO SELECCIONADO
+                string criterio = cboCriterio.SelectedItem.ToString();//ASIGNAMOS CRITERIO SELECCIONADO
+                string filtro = txtFiltroAvanzado.Text;//ASIGNAMOS FILTRO ESCRITO
+                dgvPokemons.DataSource = negocio.filtrar(campo, criterio, filtro);//PASAMOS POR PARAMETRO
+                //LOS FILTROS SELECCIONADOS PARA filtrar LA BUSQUEDA
 
             }
             catch (Exception ex)
